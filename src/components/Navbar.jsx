@@ -36,37 +36,19 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-default-200 bg-white/80 backdrop-blur-xl">
       <header className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-8">
-        {/* Left */}
-        <div className="flex items-center gap-4">
-          <button
-            className="rounded-lg p-2 transition hover:bg-default-100 md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <Bars className="h-5 w-5" />
-          </button>
+        {/* Logo - always left */}
+        <NextLink href="/" className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-md">
+            <House className="h-5 w-5" />
+          </div>
 
-          <NextLink
-            href="/"
-            className="flex items-center gap-3"
-          >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-cyan-500 text-white shadow-md">
-              <House className="h-5 w-5" />
-            </div>
+          <div>
+            <h1 className="text-xl font-black tracking-tight">NestLoom</h1>
+            <p className="text-xs text-default-500">Rental Marketplace</p>
+          </div>
+        </NextLink>
 
-            <div>
-              <h1 className="text-xl font-black tracking-tight">
-                NestLoom
-              </h1>
-
-              <p className="text-xs text-default-500">
-                Rental Marketplace
-              </p>
-            </div>
-          </NextLink>
-        </div>
-
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - middle */}
         <ul className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -99,45 +81,51 @@ export default function Navbar() {
           )}
         </ul>
 
-        {/* Right */}
-        <div className="hidden items-center gap-3 md:flex">
-          {!user ? (
-            <>
-              <Button
-                as={NextLink}
-                href="/login"
-                variant="light"
-                startContent={
-                  <ArrowRightToLine className="h-4 w-4" />
-                }
-              >
-                Login
-              </Button>
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          {/* Desktop auth buttons */}
+          <div className="hidden items-center gap-3 md:flex">
+            {!user ? (
+              <>
+                <Button
+                  as={NextLink}
+                  href="/login"
+                  variant="light"
+                  startContent={<ArrowRightToLine className="h-4 w-4" />}
+                >
+                  Login
+                </Button>
 
+                <Button
+                  as={NextLink}
+                  href="/register"
+                  color="primary"
+                  radius="full"
+                  startContent={<CirclePlus className="h-4 w-4" />}
+                >
+                  Register
+                </Button>
+              </>
+            ) : (
               <Button
-                as={NextLink}
-                href="/register"
-                color="primary"
+                color="danger"
+                variant="bordered"
                 radius="full"
-                startContent={
-                  <CirclePlus className="h-4 w-4" />
-                }
+                startContent={<ArrowRight className="h-4 w-4" />}
               >
-                Register
+                Logout
               </Button>
-            </>
-          ) : (
-            <Button
-              color="danger"
-              variant="bordered"
-              radius="full"
-              startContent={
-                <ArrowRight className="h-4 w-4" />
-              }
-            >
-              Logout
-            </Button>
-          )}
+            )}
+          </div>
+
+          {/* Hamburger - mobile only, right side */}
+          <button
+            className="rounded-lg p-2 transition hover:bg-default-100 md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <Bars className="h-5 w-5" />
+          </button>
         </div>
       </header>
 
@@ -182,9 +170,7 @@ export default function Navbar() {
                     as={NextLink}
                     href="/login"
                     variant="bordered"
-                    startContent={
-                      <ArrowRightToLine className="h-4 w-4" />
-                    }
+                    startContent={<ArrowRightToLine className="h-4 w-4" />}
                   >
                     Login
                   </Button>
@@ -193,9 +179,7 @@ export default function Navbar() {
                     as={NextLink}
                     href="/register"
                     color="primary"
-                    startContent={
-                      <CirclePlus className="h-4 w-4" />
-                    }
+                    startContent={<CirclePlus className="h-4 w-4" />}
                   >
                     Register
                   </Button>
@@ -204,9 +188,7 @@ export default function Navbar() {
                 <Button
                   color="danger"
                   variant="bordered"
-                  startContent={
-                    <ArrowRight className="h-4 w-4" />
-                  }
+                  startContent={<ArrowRight className="h-4 w-4" />}
                 >
                   Logout
                 </Button>
