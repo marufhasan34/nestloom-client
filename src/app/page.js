@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import CustomerReviews from "@/components/CustomerReviews";
+import ExploreDreamLocations from "@/components/ExploreDreamLocations";
 import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <Banner />
       <WhyChooseUs /> 
      <CustomerReviews />
+     <ExploreDreamLocations />
     </div>
   );
 }

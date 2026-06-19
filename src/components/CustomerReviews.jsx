@@ -37,12 +37,10 @@ const reviews = [
 export default function CustomerReviews() {
   return (
     <section className="relative overflow-hidden bg-slate-950 py-24">
-      {/* Background Glow */}
       <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -68,7 +66,6 @@ export default function CustomerReviews() {
           </p>
         </motion.div>
 
-        {/* Reviews Grid */}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {reviews.map((review, index) => (
             <motion.div
@@ -112,10 +109,8 @@ export default function CustomerReviews() {
                 hover:shadow-[0_0_40px_rgba(139,92,246,0.25)]
               "
             >
-              {/* Animated Top Glow */}
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-              {/* Stars */}
               <div className="mb-5 flex gap-1">
                 {[...Array(review.rating)].map((_, i) => (
                   <Star
@@ -125,12 +120,10 @@ export default function CustomerReviews() {
                 ))}
               </div>
 
-              {/* Review Text */}
               <p className="mb-8 flex-grow leading-relaxed text-slate-300">
                 {review.review}
               </p>
 
-              {/* User */}
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 font-bold text-white">
                   {review.name.charAt(0)}
