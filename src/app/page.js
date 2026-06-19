@@ -1,11 +1,12 @@
 import Banner from "@/components/Banner";
-import Footer from "@/components/Footer";
+import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Home() {
   return (
     <div>
       <Banner />
-      <Footer />
+      <WhyChooseUs /> 
+     
     </div>
   );
 }
