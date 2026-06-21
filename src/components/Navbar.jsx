@@ -87,23 +87,23 @@ export default function Navbar() {
           <div className="hidden items-center gap-3 md:flex">
             {!user ? (
               <>
-                <Button
-                  as={NextLink}
-                  href="/login"
-                  variant="light"
-                  startContent={<ArrowRightToLine className="h-4 w-4" />}
-                >
-                  Login
-                </Button>
+                <Link href="/auth/signin">
+                  <Button
+                    variant="light"
+                    startContent={<ArrowRightToLine className="h-4 w-4" />}
+                  >
+                    Login
+                  </Button>
+                </Link>
 
                 <Link href="/auth/signup">
-                    <Button
+                  <Button
                     color="primary"
                     startContent={<CirclePlus className="h-4 w-4" />}
                   >
                     Register
                   </Button>
-                  </Link>
+                </Link>
               </>
             ) : (
               <Button
@@ -165,23 +165,23 @@ export default function Navbar() {
             <li className="mt-4 flex flex-col gap-2 border-t border-default-200 pt-4">
               {!user ? (
                 <>
+                    <Link href="/auth/signin">
                   <Button
-                    as={NextLink}
-                    href="/login"
-                    variant="bordered"
+                    variant="light"
                     startContent={<ArrowRightToLine className="h-4 w-4" />}
                   >
                     Login
                   </Button>
+                </Link>
 
                   <Link href="/auth/signup">
                     <Button
-                    as={NextLink}
-                    color="primary"
-                    startContent={<CirclePlus className="h-4 w-4" />}
-                  >
-                    Register
-                  </Button>
+                      as={NextLink}
+                      color="primary"
+                      startContent={<CirclePlus className="h-4 w-4" />}
+                    >
+                      Register
+                    </Button>
                   </Link>
                 </>
               ) : (

@@ -105,7 +105,7 @@ function FloatingListingCard({ listing, index, springX }) {
         scale: { delay: 0.4 + index * 0.15, duration: 0.5 },
         y: { duration: 4 + index, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 },
       }}
-      className={`mb-5 w-48 rounded-2xl border border-white/10 bg-gradient-to-br ${listing.accent} p-4 backdrop-blur-md ${
+      className={`mb-5 w-48 rounded-2xl border border-white/10 bg-linear-to-br ${listing.accent} p-4 backdrop-blur-md ${
         index % 2 === 1 ? "ml-9" : ""
       }`}
     >
@@ -166,10 +166,10 @@ function FormField({ field, index, value, onChange }) {
         )}
       </div>
 
-      <div className="relative h-[2px] w-full">
+      <div className="relative h-0.5 w-full">
         <div className="absolute inset-x-0 top-0 border-t border-dashed border-white/15 transition-colors duration-300 group-focus-within:border-white/30" />
         <motion.div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-violet-500 to-cyan-400"
+          className="absolute inset-y-0 left-0 bg-linear-to-r from-violet-500 to-cyan-400"
           initial={false}
           animate={{ width: filled ? "100%" : "0%" }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -284,7 +284,7 @@ export default function SignUpPage() {
 
             <h1 className="text-5xl font-black leading-tight text-white">
               Find Your
-              <span className="block bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
                 Dream Rental
               </span>
             </h1>
@@ -329,7 +329,7 @@ export default function SignUpPage() {
             {/* Progress aura — fills as the form is completed */}
             <div className="mb-7 h-1 w-full overflow-hidden rounded-full bg-white/10">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
+                className="h-full rounded-full bg-linear-to-r from-violet-500 to-cyan-400"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               />
@@ -365,9 +365,9 @@ export default function SignUpPage() {
                       </motion.span>
                     )
                   }
-                  className="group relative overflow-hidden bg-gradient-to-r from-violet-600 to-cyan-500 font-semibold text-white shadow-lg shadow-violet-600/20 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/30"
+                  className="group relative overflow-hidden bg-linear-to-r from-violet-600 to-cyan-500 font-semibold text-white shadow-lg shadow-violet-600/20 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/30"
                 >
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
                   Create Account
                 </Button>
               </motion.div>
@@ -407,7 +407,7 @@ export default function SignUpPage() {
               className="mt-6 text-center text-sm text-slate-400"
             >
               Already have an account?{" "}
-              <Link href="/login" className="font-medium text-cyan-400 hover:text-cyan-300">
+              <Link href="/auth/signin" className="font-medium text-cyan-400 hover:text-cyan-300">
                 Login
               </Link>
             </motion.p>
