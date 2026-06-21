@@ -96,15 +96,14 @@ export default function Navbar() {
                   Login
                 </Button>
 
-                <Button
-                  as={NextLink}
-                  href="/register"
-                  color="primary"
-                  radius="full"
-                  startContent={<CirclePlus className="h-4 w-4" />}
-                >
-                  Register
-                </Button>
+                <Link href="/auth/signup">
+                    <Button
+                    color="primary"
+                    startContent={<CirclePlus className="h-4 w-4" />}
+                  >
+                    Register
+                  </Button>
+                  </Link>
               </>
             ) : (
               <Button
@@ -175,14 +174,15 @@ export default function Navbar() {
                     Login
                   </Button>
 
-                  <Button
+                  <Link href="/auth/signup">
+                    <Button
                     as={NextLink}
-                    href="/register"
                     color="primary"
                     startContent={<CirclePlus className="h-4 w-4" />}
                   >
                     Register
                   </Button>
+                  </Link>
                 </>
               ) : (
                 <Button
