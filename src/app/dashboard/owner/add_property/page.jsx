@@ -17,7 +17,6 @@ import {
 } from "@heroui/react";
 import { createProperty } from "@/lib/actions/property";
 
-// ── Animation variants ──────────────────────────────────────────────────────
 const container = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.09 } },
@@ -28,7 +27,6 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
-// ── Shared input class ──────────────────────────────────────────────────────
 const inputCls = `
   w-full rounded-xl border border-dashed border-slate-700/80
   bg-slate-900/60 px-3.5 py-2.5 text-sm text-slate-100
@@ -38,7 +36,6 @@ const inputCls = `
   data-[invalid=true]:border-red-500/60
 `;
 
-// ── Field ───────────────────────────────────────────────────────────────────
 function Field({ label, name, placeholder, type = "text", isRequired }) {
   return (
     <TextField
@@ -57,24 +54,14 @@ function Field({ label, name, placeholder, type = "text", isRequired }) {
   );
 }
 
-// ── Select ──────────────────────────────────────────────────────────────────
-function Sel({
-  label,
-  name,
-  placeholder,
-  isRequired,
-  items,
-  accent = "violet",
-}) {
+function Sel({ label, name, placeholder, isRequired, items, accent = "violet" }) {
   return (
     <Select name={name} isRequired={isRequired} className="flex flex-col gap-1">
       <Label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
         {label}
         {isRequired && <span className="ml-1 text-violet-400">*</span>}
       </Label>
-      <Select.Trigger
-        className={inputCls + " flex items-center justify-between"}
-      >
+      <Select.Trigger className={inputCls + " flex items-center justify-between"}>
         <Select.Value className="data-[placeholder=true]:text-slate-600" />
         <Select.Indicator className="text-slate-500" />
       </Select.Trigger>
@@ -99,7 +86,6 @@ function Sel({
   );
 }
 
-// ── Section wrapper ─────────────────────────────────────────────────────────
 function Section({ title, children }) {
   return (
     <motion.div variants={fadeUp}>
@@ -115,30 +101,18 @@ function Section({ title, children }) {
   );
 }
 
-// ── Amenities ───────────────────────────────────────────────────────────────
 const AMENITIES = [
-  "WiFi",
-  "Parking",
-  "Air Conditioning",
-  "Heating",
-  "Washer",
-  "Dryer",
-  "Kitchen",
-  "TV",
-  "Gym",
-  "Pool",
-  "Elevator",
-  "Security",
-  "Balcony",
-  "Garden",
+  "WiFi", "Parking", "Air Conditioning", "Heating", "Washer",
+  "Dryer", "Kitchen", "TV", "Gym", "Pool", "Elevator",
+  "Security", "Balcony", "Garden",
 ];
 
-// ════════════════════════════════════════════════════════════════════════════
 export default function AddProperty() {
   const [amenities, setAmenities] = useState([]);
   const [images, setImages] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
+
   const toggleAmenity = (a) =>
     setAmenities((p) => (p.includes(a) ? p.filter((x) => x !== a) : [...p, a]));
 
@@ -149,7 +123,8 @@ export default function AddProperty() {
     try {
       const data = Object.fromEntries(new FormData(e.currentTarget));
       data.amenities = amenities;
-      data.status = "Pending";
+      data.status = "pending";
+      data.myPropertyId = "property_123";
 
       const res = await createProperty(data);
 
@@ -172,7 +147,6 @@ export default function AddProperty() {
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-10 md:px-10">
-      {/* Header */}
       <motion.div
         className="mb-8"
         initial={{ opacity: 0, y: -16 }}
@@ -197,48 +171,22 @@ export default function AddProperty() {
           initial="hidden"
           animate="visible"
         >
-          {/* ── Basic Info ── */}
           <Section title="Basic Information">
             <div className="sm:col-span-2">
-              <Field
-                label="Property Title"
-                name="title"
-                placeholder="e.g. Cozy Studio in Gulshan"
-                isRequired
-              />
+              <Field label="Property Title" name="title" placeholder="e.g. Cozy Studio in Gulshan" isRequired />
             </div>
-            <Field
-              label="Location"
-              name="location"
-              placeholder="e.g. Gulshan-2, Dhaka"
-              isRequired
-            />
+            <Field label="Location" name="location" placeholder="e.g. Gulshan-2, Dhaka" isRequired />
             <Sel
               label="Property Type"
               name="propertyType"
               placeholder="Select type"
               isRequired
-              items={[
-                "Apartment",
-                "House",
-                "Studio",
-                "Villa",
-                "Room",
-                "Office",
-                "Shop",
-              ]}
+              items={["Apartment", "House", "Studio", "Villa", "Room", "Office", "Shop"]}
             />
           </Section>
 
-          {/* ── Pricing ── */}
           <Section title="Pricing & Rental Terms">
-            <Field
-              label="Rent (BDT)"
-              name="rent"
-              type="number"
-              placeholder="e.g. 25000"
-              isRequired
-            />
+            <Field label="Rent (BDT)" name="rent" type="number" placeholder="e.g. 25000" isRequired />
             <Sel
               label="Rent Type"
               name="rentType"
@@ -247,36 +195,14 @@ export default function AddProperty() {
               accent="cyan"
               items={["Monthly", "Weekly", "Daily"]}
             />
-            <Field
-              label="Property Size (sq ft)"
-              name="size"
-              type="number"
-              placeholder="e.g. 850"
-            />
+            <Field label="Property Size (sq ft)" name="size" type="number" placeholder="e.g. 850" />
           </Section>
 
-          {/* ── Details ── */}
           <Section title="Property Details">
-            <Field
-              label="Bedrooms"
-              name="bedrooms"
-              type="number"
-              placeholder="e.g. 3"
-              isRequired
-            />
-            <Field
-              label="Bathrooms"
-              name="bathrooms"
-              type="number"
-              placeholder="e.g. 2"
-              isRequired
-            />
+            <Field label="Bedrooms" name="bedrooms" type="number" placeholder="e.g. 3" isRequired />
+            <Field label="Bathrooms" name="bathrooms" type="number" placeholder="e.g. 2" isRequired />
             <div className="sm:col-span-2">
-              <TextField
-                name="description"
-                isRequired
-                className="flex flex-col gap-1"
-              >
+              <TextField name="description" isRequired className="flex flex-col gap-1">
                 <Label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
                   Description <span className="text-violet-400">*</span>
                 </Label>
@@ -302,7 +228,6 @@ export default function AddProperty() {
             </div>
           </Section>
 
-          {/* ── Amenities ── */}
           <motion.div variants={fadeUp}>
             <Fieldset className="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-5 backdrop-blur-sm">
               <Fieldset.Legend className="mb-1 text-sm font-semibold text-slate-300 tracking-wide">
@@ -335,15 +260,13 @@ export default function AddProperty() {
                 </div>
                 {amenities.length > 0 && (
                   <p className="mt-3 text-[11px] text-cyan-400/70">
-                    {amenities.length} amenit
-                    {amenities.length > 1 ? "ies" : "y"} selected
+                    {amenities.length} amenit{amenities.length > 1 ? "ies" : "y"} selected
                   </p>
                 )}
               </Fieldset.Group>
             </Fieldset>
           </motion.div>
 
-          {/* ── Images ── */}
           <motion.div variants={fadeUp}>
             <Fieldset className="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-5 backdrop-blur-sm">
               <Fieldset.Legend className="mb-1 text-sm font-semibold text-slate-300 tracking-wide">
@@ -361,25 +284,13 @@ export default function AddProperty() {
                     transition-all duration-200
                     hover:border-violet-500/40 hover:bg-slate-900/40"
                 >
-                  <svg
-                    className="h-8 w-8 text-slate-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
+                  <svg className="h-8 w-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                       d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                     />
                   </svg>
-                  <p className="text-sm font-medium text-slate-400">
-                    Click to upload images
-                  </p>
-                  <p className="text-[11px] text-slate-600">
-                    PNG, JPG, WEBP — up to 5MB each
-                  </p>
+                  <p className="text-sm font-medium text-slate-400">Click to upload images</p>
+                  <p className="text-[11px] text-slate-600">PNG, JPG, WEBP — up to 5MB each</p>
                   <input
                     id="images"
                     type="file"
@@ -393,15 +304,8 @@ export default function AddProperty() {
                 {images.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2.5">
                     {images.map((file, i) => (
-                      <div
-                        key={i}
-                        className="relative h-16 w-16 overflow-hidden rounded-xl border border-slate-700/60"
-                      >
-                        <img
-                          src={URL.createObjectURL(file)}
-                          alt=""
-                          className="h-full w-full object-cover"
-                        />
+                      <div key={i} className="relative h-16 w-16 overflow-hidden rounded-xl border border-slate-700/60">
+                        <img src={URL.createObjectURL(file)} alt="" className="h-full w-full object-cover" />
                         {i === 0 && (
                           <span className="absolute bottom-0 left-0 right-0 bg-violet-600/80 py-0.5 text-center text-[8px] font-bold text-white">
                             COVER
@@ -415,30 +319,12 @@ export default function AddProperty() {
             </Fieldset>
           </motion.div>
 
-          {/* ── Owner Info ── */}
           <Section title="Owner Information">
-            <Field
-              label="Owner Name"
-              name="ownerName"
-              placeholder="Your full name"
-              isRequired
-            />
-            <Field
-              label="Contact Email"
-              name="ownerEmail"
-              type="email"
-              placeholder="owner@example.com"
-              isRequired
-            />
-            <Field
-              label="Phone"
-              name="ownerPhone"
-              type="tel"
-              placeholder="+880 1XXXXXXXXX"
-            />
+            <Field label="Owner Name" name="ownerName" placeholder="Your full name" isRequired />
+            <Field label="Contact Email" name="ownerEmail" type="email" placeholder="owner@example.com" isRequired />
+            <Field label="Phone" name="ownerPhone" type="tel" placeholder="+880 1XXXXXXXXX" />
           </Section>
 
-          {/* ── Submit ── */}
           <motion.div
             variants={fadeUp}
             className="flex flex-col items-center gap-3 pt-1 sm:flex-row sm:justify-end"
@@ -467,24 +353,9 @@ export default function AddProperty() {
               >
                 {submitting ? (
                   <span className="flex items-center gap-2">
-                    <svg
-                      className="h-4 w-4 animate-spin"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8z"
-                      />
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
                     Submitting…
                   </span>
