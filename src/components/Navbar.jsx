@@ -13,12 +13,13 @@ import {
   ArrowRight,
   CirclePlus,
 } from "@gravity-ui/icons";
+import { useSession } from "@/lib/auth-client";
+import { NavDropDown } from "./NavDropDown";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // TODO: Replace with your auth context
-  const user = null;
+  const {data: session, isPending} = useSession()
+  const user = session?.user
 
   const navItems = [
     {
@@ -67,18 +68,7 @@ export default function Navbar() {
             );
           })}
 
-          {user && (
-            <li>
-              <Link
-                as={NextLink}
-                href="/dashboard"
-                className="flex items-center gap-2 font-medium text-primary"
-              >
-                <LayoutSideContent className="h-4 w-4" />
-                Dashboard
-              </Link>
-            </li>
-          )}
+          
         </ul>
 
         {/* Right side */}
@@ -106,14 +96,7 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              <Button
-                color="danger"
-                variant="bordered"
-                radius="full"
-                startContent={<ArrowRight className="h-4 w-4" />}
-              >
-                Logout
-              </Button>
+             <NavDropDown />
             )}
           </div>
 
@@ -149,18 +132,7 @@ export default function Navbar() {
               );
             })}
 
-            {user && (
-              <li>
-                <Link
-                  as={NextLink}
-                  href="/dashboard"
-                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-primary hover:bg-primary-50"
-                >
-                  <LayoutSideContent className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </li>
-            )}
+            
 
             <li className="mt-4 flex flex-col gap-2 border-t border-default-200 pt-4">
               {!user ? (
@@ -185,13 +157,7 @@ export default function Navbar() {
                   </Link>
                 </>
               ) : (
-                <Button
-                  color="danger"
-                  variant="bordered"
-                  startContent={<ArrowRight className="h-4 w-4" />}
-                >
-                  Logout
-                </Button>
+               <NavDropDown />
               )}
             </li>
           </ul>

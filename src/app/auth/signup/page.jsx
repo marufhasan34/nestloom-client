@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { signIn, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-
+import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { Button } from "@heroui/react";
 
 import { ArrowRight } from "@gravity-ui/icons";
@@ -36,10 +36,30 @@ const listings = [
 ];
 
 const fields = [
-  { key: "name", label: "Full Name", placeholder: "Jordan Avery", type: "text" },
-  { key: "email", label: "Email Address", placeholder: "you@example.com", type: "email" },
-  { key: "image", label: "Photo URL", placeholder: "https://...", type: "text" },
-  { key: "password", label: "Password", placeholder: "••••••••", type: "password" },
+  {
+    key: "name",
+    label: "Full Name",
+    placeholder: "Jordan Avery",
+    type: "text",
+  },
+  {
+    key: "email",
+    label: "Email Address",
+    placeholder: "you@example.com",
+    type: "email",
+  },
+  {
+    key: "image",
+    label: "Photo URL",
+    placeholder: "https://...",
+    type: "text",
+  },
+  {
+    key: "password",
+    label: "Password",
+    placeholder: "••••••••",
+    type: "password",
+  },
 ];
 
 const fieldVariants = {
@@ -47,7 +67,11 @@ const fieldVariants = {
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: 0.15 + i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+    transition: {
+      delay: 0.15 + i * 0.08,
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
   }),
 };
 
@@ -103,7 +127,12 @@ function FloatingListingCard({ listing, index, springX }) {
       transition={{
         opacity: { delay: 0.4 + index * 0.15, duration: 0.5 },
         scale: { delay: 0.4 + index * 0.15, duration: 0.5 },
-        y: { duration: 4 + index, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 },
+        y: {
+          duration: 4 + index,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.3,
+        },
       }}
       className={`mb-5 w-48 rounded-2xl border border-white/10 bg-linear-to-br ${listing.accent} p-4 backdrop-blur-md ${
         index % 2 === 1 ? "ml-9" : ""
@@ -182,7 +211,13 @@ function FormField({ field, index, value, onChange }) {
 export default function SignUpPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [values, setValues] = useState({ name: "", email: "", image: "", password: "" });
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    image: "",
+    password: "",
+  });
+  const [role, setRole] = useState("tenant");
 
   const containerRef = useRef(null);
   const mouseX = useMotionValue(0);
@@ -212,6 +247,7 @@ export default function SignUpPage() {
         name,
         email,
         password,
+        role,
         image,
         callbackURL: "/",
       });
@@ -290,17 +326,23 @@ export default function SignUpPage() {
             </h1>
 
             <p className="mt-6 max-w-md text-lg text-slate-400">
-              Discover trusted rental properties, connect with verified owners, and secure your
-              next home with confidence.
+              Discover trusted rental properties, connect with verified owners,
+              and secure your next home with confidence.
             </p>
 
             <div className="mt-10 grid grid-cols-2 gap-4">
-              <motion.div whileHover={{ y: -4 }} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <motion.div
+                whileHover={{ y: -4 }}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              >
                 <h3 className="text-2xl font-bold text-white">10K+</h3>
                 <p className="text-slate-400">Happy Tenants</p>
               </motion.div>
 
-              <motion.div whileHover={{ y: -4 }} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <motion.div
+                whileHover={{ y: -4 }}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              >
                 <h3 className="text-2xl font-bold text-white">5K+</h3>
                 <p className="text-slate-400">Properties</p>
               </motion.div>
@@ -309,7 +351,12 @@ export default function SignUpPage() {
             {/* Floating listing cards — mouse-reactive parallax */}
             <div className="pointer-events-none absolute -right-6 top-8 hidden xl:block">
               {listings.map((listing, i) => (
-                <FloatingListingCard key={listing.id} listing={listing} index={i} springX={springX} />
+                <FloatingListingCard
+                  key={listing.id}
+                  listing={listing}
+                  index={i}
+                  springX={springX}
+                />
               ))}
             </div>
           </motion.div>
@@ -323,7 +370,9 @@ export default function SignUpPage() {
           >
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-white">Create Account</h2>
-              <p className="mt-2 text-slate-400">Start your rental journey today</p>
+              <p className="mt-2 text-slate-400">
+                Start your rental journey today
+              </p>
             </div>
 
             {/* Progress aura — fills as the form is completed */}
@@ -337,15 +386,51 @@ export default function SignUpPage() {
 
             <form onSubmit={handleSignUp} className="space-y-7">
               {fields.map((field, i) => (
-                <motion.div key={field.key} custom={i} variants={fieldVariants} initial="hidden" animate="visible">
-                  <FormField field={field} index={i} value={values[field.key]} onChange={handleChange(field.key)} />
+                <motion.div
+                  key={field.key}
+                  custom={i}
+                  variants={fieldVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <FormField
+                    field={field}
+                    index={i}
+                    value={values[field.key]}
+                    onChange={handleChange(field.key)}
+                  />
                 </motion.div>
               ))}
+
+              <div className="flex text-white flex-col gap-4">
+      <Label className="text-white">Subscription plan</Label>
+      <RadioGroup onChange={value => setRole(value)} defaultValue="tenant" name="role"      orientation="horizontal">
+        <Radio value="tenant">
+          <Radio.Content>
+            <Radio.Control>
+              <Radio.Indicator />
+            </Radio.Control>
+            <Label className="text-white">Tenant</Label>
+          </Radio.Content>
+        </Radio>
+        <Radio value="owner">
+          <Radio.Content>
+            <Radio.Control>
+              <Radio.Indicator />
+            </Radio.Control>
+           <Label className="text-white">Owner</Label>
+          </Radio.Content>
+        </Radio>
+      </RadioGroup>
+    </div>
 
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 + fields.length * 0.08, duration: 0.5 }}
+                transition={{
+                  delay: 0.15 + fields.length * 0.08,
+                  duration: 0.5,
+                }}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 className="pt-2"
@@ -359,7 +444,11 @@ export default function SignUpPage() {
                     !loading && (
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{
+                          duration: 1.4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
                       >
                         <ArrowRight />
                       </motion.span>
@@ -380,7 +469,9 @@ export default function SignUpPage() {
               className="my-5 flex items-center gap-3"
             >
               <span className="h-px flex-1 bg-white/10" />
-              <span className="text-xs uppercase tracking-wider text-slate-500">or</span>
+              <span className="text-xs uppercase tracking-wider text-slate-500">
+                or
+              </span>
               <span className="h-px flex-1 bg-white/10" />
             </motion.div>
 
@@ -407,7 +498,10 @@ export default function SignUpPage() {
               className="mt-6 text-center text-sm text-slate-400"
             >
               Already have an account?{" "}
-              <Link href="/auth/signin" className="font-medium text-cyan-400 hover:text-cyan-300">
+              <Link
+                href="/auth/signin"
+                className="font-medium text-cyan-400 hover:text-cyan-300"
+              >
                 Login
               </Link>
             </motion.p>
