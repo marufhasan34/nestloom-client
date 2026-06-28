@@ -5,11 +5,11 @@ import React from "react";
 import { Compass, House, Calendar } from "@gravity-ui/icons";
 import DashboardStats from "../DashboardStats";
 const OwnerDashboardHomePage = () => {
-  const { data: session, isPending } = useSession();
+  // const { data: session, isPending } = useSession();
 
-  if (isPending) {
-    return <Spinner color="current" />;
-  }
+  // if (isPending) {
+  //   return <Spinner color="current" />;
+  // }
 
   const ownerStats = [
     {
@@ -32,7 +32,7 @@ const OwnerDashboardHomePage = () => {
     },
   ];
 
-  const user = session?.user;
+  // const user = session?.user;
 
   return (
     <div>

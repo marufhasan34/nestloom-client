@@ -1,6 +1,7 @@
 import { signOut, useSession } from "@/lib/auth-client";
-import {ArrowRightFromSquare, Person} from "@gravity-ui/icons";
+import {ArrowRightFromSquare, FolderOpen} from "@gravity-ui/icons";
 import {Avatar, Dropdown, Label} from "@heroui/react";
+import Link from "next/link";
 
 export function NavDropDown() {
     const {data:session} = useSession()
@@ -38,11 +39,13 @@ export function NavDropDown() {
           </div>
         </div>
         <Dropdown.Menu>
-          <Dropdown.Item id="profile" textValue="Profile">
-            <div className="flex w-full items-center justify-between gap-2">
-              <Label>Profile</Label>
-              <Person className="size-3.5" />
+          <Dropdown.Item id="dashboard" textValue="dashboard">
+            <Link href={`/dashboard/${user?.role}`}>
+              <div className="flex w-full items-center justify-between gap-2">
+              <div><Label>Dashboard</Label></div>
+              <div><FolderOpen /></div>
             </div>
+            </Link>
           </Dropdown.Item>
           <Dropdown.Item id="logout" textValue="Logout" variant="danger">
             <div onClick={handleSignOut} className="flex w-full items-center justify-between gap-2">
