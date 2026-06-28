@@ -16,12 +16,12 @@ import {
   toast,
 } from "@heroui/react";
 import { createProperty } from "@/lib/actions/property";
+import { imageUpload } from "@/lib/imageUpload";
 
 const container = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.09 } },
 };
-
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
@@ -38,12 +38,7 @@ const inputCls = `
 
 function Field({ label, name, placeholder, type = "text", isRequired }) {
   return (
-    <TextField
-      name={name}
-      type={type}
-      isRequired={isRequired}
-      className="flex flex-col gap-1"
-    >
+    <TextField name={name} type={type} isRequired={isRequired} className="flex flex-col gap-1">
       <Label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
         {label}
         {isRequired && <span className="ml-1 text-violet-400">*</span>}
@@ -54,7 +49,7 @@ function Field({ label, name, placeholder, type = "text", isRequired }) {
   );
 }
 
-function Sel({ label, name, placeholder, isRequired, items, accent = "violet" }) {
+function Sel({ label, name, isRequired, items, accent = "violet" }) {
   return (
     <Select name={name} isRequired={isRequired} className="flex flex-col gap-1">
       <Label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
@@ -69,9 +64,7 @@ function Sel({ label, name, placeholder, isRequired, items, accent = "violet" })
         <ListBox className="p-1">
           {items.map((t) => (
             <ListBox.Item
-              key={t}
-              id={t}
-              textValue={t}
+              key={t} id={t} textValue={t}
               className={`cursor-pointer rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors
                 hover:bg-${accent}-500/10 hover:text-${accent}-300
                 data-[selected=true]:bg-${accent}-500/20 data-[selected=true]:text-${accent}-200`}
@@ -111,6 +104,7 @@ export default function AddProperty() {
   const [amenities, setAmenities] = useState([]);
   const [images, setImages] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
   const router = useRouter();
 
   const toggleAmenity = (a) =>
@@ -121,16 +115,28 @@ export default function AddProperty() {
     setSubmitting(true);
 
     try {
-      const data = Object.fromEntries(new FormData(e.currentTarget));
-      data.amenities = amenities;
-      data.status = "pending";
-      data.myPropertyId = "property_123";
+      let imageUrls = [];
+      if (images.length > 0) {
+        setUploadProgress(`Uploading ${images.length} image${images.length > 1 ? "s" : ""}…`);
+        imageUrls = await Promise.all(images.map((file) => imageUpload(file)));
+        imageUrls = imageUrls.filter(Boolean);
+      }
+
+      const formData = new FormData(e.nativeEvent.target);
+      const data = Object.fromEntries(formData);
+
+      data.amenities  = amenities;
+      data.imageUrls  = imageUrls;
+      data.coverImage = imageUrls[0] ?? null;
+      data.status     = "pending";
+
+      setUploadProgress("Saving listing…");
 
       const res = await createProperty(data);
 
-      if (res.insertedId) {
-        toast.success("Property posted successfully");
-        e.target.reset();
+      if (res?.insertedId) {
+        toast.success("Property posted! Awaiting admin review.");
+        e.nativeEvent.target.reset();
         setAmenities([]);
         setImages([]);
         router.push("/dashboard/owner");
@@ -138,12 +144,14 @@ export default function AddProperty() {
         toast.danger("Something went wrong. Please try again.");
       }
     } catch (err) {
-      toast.danger("Failed to submit listing.");
+      toast.danger(`Submission failed: ${err.message}`);
       console.error(err);
     } finally {
       setSubmitting(false);
+      setUploadProgress("");
     }
   };
+
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-10 md:px-10">
       <motion.div
@@ -164,22 +172,15 @@ export default function AddProperty() {
       </motion.div>
 
       <Form onSubmit={handleSubmit}>
-        <motion.div
-          className="space-y-4"
-          variants={container}
-          initial="hidden"
-          animate="visible"
-        >
+        <motion.div className="space-y-4" variants={container} initial="hidden" animate="visible">
+
           <Section title="Basic Information">
             <div className="sm:col-span-2">
               <Field label="Property Title" name="title" placeholder="e.g. Cozy Studio in Gulshan" isRequired />
             </div>
             <Field label="Location" name="location" placeholder="e.g. Gulshan-2, Dhaka" isRequired />
             <Sel
-              label="Property Type"
-              name="propertyType"
-              placeholder="Select type"
-              isRequired
+              label="Property Type" name="propertyType" isRequired
               items={["Apartment", "House", "Studio", "Villa", "Room", "Office", "Shop"]}
             />
           </Section>
@@ -187,11 +188,7 @@ export default function AddProperty() {
           <Section title="Pricing & Rental Terms">
             <Field label="Rent (BDT)" name="rent" type="number" placeholder="e.g. 25000" isRequired />
             <Sel
-              label="Rent Type"
-              name="rentType"
-              placeholder="Select period"
-              isRequired
-              accent="cyan"
+              label="Rent Type" name="rentType" isRequired accent="cyan"
               items={["Monthly", "Weekly", "Daily"]}
             />
             <Field label="Property Size (sq ft)" name="size" type="number" placeholder="e.g. 850" />
@@ -207,8 +204,7 @@ export default function AddProperty() {
                 </Label>
                 <TextArea
                   placeholder="Describe the property — highlights, nearby facilities…"
-                  rows={4}
-                  className={inputCls + " resize-none"}
+                  rows={4} className={inputCls + " resize-none"}
                 />
                 <FieldError className="text-[11px] text-red-400" />
               </TextField>
@@ -220,8 +216,7 @@ export default function AddProperty() {
                 </Label>
                 <TextArea
                   placeholder="e.g. Rooftop access, generator backup, CCTV…"
-                  rows={2}
-                  className={inputCls + " resize-none"}
+                  rows={2} className={inputCls + " resize-none"}
                 />
               </TextField>
             </div>
@@ -232,17 +227,14 @@ export default function AddProperty() {
               <Fieldset.Legend className="mb-1 text-sm font-semibold text-slate-300 tracking-wide">
                 Amenities
               </Fieldset.Legend>
-              <p className="mb-4 text-[11px] text-slate-500">
-                Toggle everything available at this property
-              </p>
+              <p className="mb-4 text-[11px] text-slate-500">Toggle everything available at this property</p>
               <Fieldset.Group>
                 <div className="flex flex-wrap gap-2">
                   {AMENITIES.map((a) => {
                     const on = amenities.includes(a);
                     return (
                       <motion.button
-                        type="button"
-                        key={a}
+                        type="button" key={a}
                         onClick={() => toggleAmenity(a)}
                         whileTap={{ scale: 0.93 }}
                         className={`rounded-full border px-3.5 py-1 text-xs font-medium transition-all duration-200 ${
@@ -251,8 +243,7 @@ export default function AddProperty() {
                             : "border-slate-700/50 bg-slate-900/30 text-slate-500 hover:border-slate-600 hover:text-slate-300"
                         }`}
                       >
-                        {on && "✓ "}
-                        {a}
+                        {on && "✓ "}{a}
                       </motion.button>
                     );
                   })}
@@ -271,17 +262,13 @@ export default function AddProperty() {
               <Fieldset.Legend className="mb-1 text-sm font-semibold text-slate-300 tracking-wide">
                 Property Images
               </Fieldset.Legend>
-              <p className="mb-4 text-[11px] text-slate-500">
-                First image becomes the cover photo
-              </p>
+              <p className="mb-4 text-[11px] text-slate-500">First image becomes the cover photo</p>
               <Fieldset.Group>
                 <label
                   htmlFor="images"
                   className="flex cursor-pointer flex-col items-center justify-center gap-2.5
-                    rounded-2xl border-2 border-dashed border-slate-700/50
-                    bg-slate-900/20 py-8
-                    transition-all duration-200
-                    hover:border-violet-500/40 hover:bg-slate-900/40"
+                    rounded-2xl border-2 border-dashed border-slate-700/50 bg-slate-900/20 py-8
+                    transition-all duration-200 hover:border-violet-500/40 hover:bg-slate-900/40"
                 >
                   <svg className="h-8 w-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -291,11 +278,7 @@ export default function AddProperty() {
                   <p className="text-sm font-medium text-slate-400">Click to upload images</p>
                   <p className="text-[11px] text-slate-600">PNG, JPG, WEBP — up to 5MB each</p>
                   <input
-                    id="images"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="hidden"
+                    id="images" type="file" multiple accept="image/*" className="hidden"
                     onChange={(e) => setImages(Array.from(e.target.files))}
                   />
                 </label>
@@ -338,6 +321,7 @@ export default function AddProperty() {
             <div className="flex gap-2.5">
               <Button
                 type="reset"
+                onPress={() => { setAmenities([]); setImages([]); }}
                 className="rounded-xl border border-slate-700/60 bg-slate-900/60 px-5 py-2 text-sm font-medium text-slate-400
                   transition-all hover:border-slate-600 hover:text-slate-200"
               >
@@ -356,7 +340,7 @@ export default function AddProperty() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
-                    Submitting…
+                    {uploadProgress || "Submitting…"}
                   </span>
                 ) : (
                   "Submit Listing"
@@ -364,6 +348,7 @@ export default function AddProperty() {
               </Button>
             </div>
           </motion.div>
+
         </motion.div>
       </Form>
     </div>

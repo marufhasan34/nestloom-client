@@ -20,7 +20,7 @@ export async function DashboardSidebar() {
     headers:await headers()
   })
   const user = session?.user
-  const role = user?.role || 'tenant'
+  const role = user?.role;
   const dashboardItems = {
     owner: [
       {icon: House, label: 'Overview', link: '/dashboard/owner'},
@@ -82,14 +82,15 @@ export async function DashboardSidebar() {
               <Drawer.Body>
                 <nav className="flex flex-col gap-1">
                   {navItems.map((item) => (
-                    <button
-                      key={item.label}
+                     <Link key={item.label} href={item.link}>
+                      <button
                       className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
                       type="button"
                     >
                       <item.icon className="size-5 text-muted" />
                       {item.label}
                     </button>
+                    </Link>
                   ))}
                 </nav>
               </Drawer.Body>
